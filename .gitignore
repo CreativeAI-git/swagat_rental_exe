@@ -1,0 +1,68 @@
+# -----------------------------
+# Node Modules
+# -----------------------------
+node_modules/
+
+# -----------------------------
+# Build / pkg Output
+# -----------------------------
+dist/
+*.exe
+*.zip
+
+# Keep installer script but ignore compiled setup exe
+SwagatInventorySetup.exe
+
+# -----------------------------
+# Logs
+# -----------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -----------------------------
+# Runtime / Local Files
+# -----------------------------
+config.json
+*.local.json
+
+# System ID storage (if you ever create one)
+system_id.json
+
+# -----------------------------
+# Environment Files
+# -----------------------------
+.env
+.env.*
+
+# -----------------------------
+# Windows / OS Files
+# -----------------------------
+Thumbs.db
+Desktop.ini
+
+# -----------------------------
+# VS Code
+# -----------------------------
+.vscode/
+.history/
+
+# -----------------------------
+# Mac (if ever used)
+# -----------------------------
+.DS_Store
+
+# -----------------------------
+# Coverage / Testing
+# -----------------------------
+coverage/
+.nyc_output/
+
+# -----------------------------
+# Temporary Files
+# -----------------------------
+tmp/
+temp/
+*.tmp
