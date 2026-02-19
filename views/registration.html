@@ -2,53 +2,74 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Swagat Inventory Agent</title>
+<title>Swagat Inventory Registration</title>
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4e73df, #1cc88a);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .card {
-    background: #fff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    width: 350px;
-    text-align: center;
-  }
-  h2 { margin-bottom: 20px; }
-  input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    background: #4e73df;
-    color: white;
-    cursor: pointer;
-  }
-  button:hover { background: #2e59d9; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #4e73df, #1cc88a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+h2 { text-align:center; margin-bottom:20px; }
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #4e73df;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover { background: #2e59d9; }
+.section-title {
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
 </style>
 </head>
 <body>
 
 <div class="card">
-  <h2>Swagat Inventory Registration</h2>
-  <form method="POST" action="/register">
-    <input name="client_id" placeholder="Enter Client Unique ID" required />
-    <button type="submit">Register</button>
-  </form>
+<h2>Swagat Inventory Registration</h2>
+
+<form method="POST" action="/register">
+
+<div class="section-title">Client Info <span style="color:red;">*</span></div>
+<input name="client_id" placeholder="Client Unique ID" required />
+
+<div class="section-title">Monitor Details</div>
+<input name="monitor_brand" placeholder="Monitor Brand" />
+<input name="monitor_serial" placeholder="Monitor Serial Number" />
+
+<div class="section-title">Keyboard Details</div>
+<input name="keyboard_brand" placeholder="Keyboard Brand" />
+<input name="keyboard_serial" placeholder="Keyboard Serial Number" />
+
+<div class="section-title">Mouse Details</div>
+<input name="mouse_brand" placeholder="Mouse Brand" />
+
+
+<button type="submit">Complete Registration</button>
+
+</form>
 </div>
 
 </body>

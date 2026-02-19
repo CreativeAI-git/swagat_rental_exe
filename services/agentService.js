@@ -1,47 +1,54 @@
-const si = require("systeminformation");
 const axios = require("axios");
-const { getOrCreateSystemId } = require("../utils/utils");
+const collectData = require("../utils/system_info_collector");
+const { readSystemIdentity } = require("../utils/system_identity_storage");
 
 const API_URL = "https://api.creativethoughts.ai/api/user/addPCInfo";
 
 let isSending = false;
-
-async function collectData() {
-  return {
-    os: await si.osInfo(),
-    cpu: await si.cpu(),
-    ram: await si.mem(),
-    disk: await si.diskLayout(),
-    network: await si.networkInterfaces(),
-    motherboard: await si.baseboard(),
-    bios: await si.bios()
-  };
-}
 
 async function sendToServer() {
   if (isSending) return;
   isSending = true;
 
   try {
-    const data = await collectData();
-    const systemId = getOrCreateSystemId();
+    const identity = readSystemIdentity();
 
-    await axios.post(API_URL, {
-      system_id: systemId,
-      json: data
-    });
+    if (!identity || !identity.system_id) {
+      console.log("⚠ System not registered. Run --register first.");
+      return;
+    }
 
-    console.log("✅ Data Sent");
+    const systemId = identity.system_id;
+
+    const snapshot = await collectData();
+
+    console.log("📡 Sending snapshot for:", systemId);
+
+    await axios.post(
+      API_URL,
+      {
+        system_id: systemId,
+        snapshot: snapshot
+      },
+      { timeout: 15000 }
+    );
+
+    console.log("✅ Snapshot sent successfully");
 
   } catch (err) {
-    console.error("❌ Error:", err.message);
+    console.error("❌ Agent Error:", err.message);
   } finally {
     isSending = false;
   }
 }
 
 function startAgent() {
+  console.log("🚀 Swagat Inventory Agent Started");
+  
+  // First immediate send
   sendToServer();
+
+  // Every 5 minutes
   setInterval(sendToServer, 5 * 60 * 1000);
 }
 
