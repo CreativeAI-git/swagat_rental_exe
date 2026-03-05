@@ -3,23 +3,30 @@ const si = require("systeminformation");
 
 function clean(value) {
   if (!value) return "";
-  return value.toString().trim();
+  return value.toString().trim().toLowerCase();
 }
 
 async function generateHardwareFingerprint() {
-  const [baseboard, bios, os] = await Promise.all([
+  const [system, baseboard, bios, cpu] = await Promise.all([
+    si.system(),
     si.baseboard(),
     si.bios(),
-    si.osInfo()
+    si.cpu()
   ]);
 
-  const raw = [
+  const rawFingerprint = [
+    clean(system.uuid),
     clean(baseboard.serial),
     clean(bios.serial),
-    clean(os.hostname)
+    clean(cpu.processorId)
   ].join("|");
 
-  return crypto.createHash("sha256").update(raw).digest("hex");
+  const fingerprint = crypto
+    .createHash("sha256")
+    .update(rawFingerprint)
+    .digest("hex");
+
+  return fingerprint;
 }
 
 module.exports = { generateHardwareFingerprint };

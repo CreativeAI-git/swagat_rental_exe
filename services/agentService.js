@@ -2,7 +2,8 @@ const axios = require("axios");
 const collectData = require("../utils/system_info_collector");
 const { readSystemIdentity } = require("../utils/system_identity_storage");
 
-const API_URL = "https://api.creativethoughts.ai/api/user/addPCInfo";
+const API_URL = "http://187.124.99.24:8010/api/user/systemSnapshot";
+// const API_URL = "http://192.168.1.48:8010/api/user/systemSnapshot";
 
 let isSending = false;
 

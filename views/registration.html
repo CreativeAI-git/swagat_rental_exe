@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Swagat Inventory Registration</title>
+
 <style>
+  *{
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+  }
+  .mb-4{
+    margin-bottom: 15px;
+  }
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -13,14 +22,18 @@ body {
   align-items: center;
   height: 100vh;
 }
+
 .card {
   background: #fff;
   padding: 30px;
   border-radius: 10px;
-  width: 400px;
+  width: 100%;
+  max-width: 450px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
 h2 { text-align:center; margin-bottom:20px; }
+
 input {
   width: 100%;
   padding: 10px;
@@ -28,6 +41,7 @@ input {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+
 button {
   width: 100%;
   padding: 12px;
@@ -36,41 +50,152 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 }
+
 button:hover { background: #2e59d9; }
+
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
 .section-title {
   font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.loader {
+  display: none;
+  text-align: center;
   margin-top: 15px;
-  margin-bottom: 5px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4e73df;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 </head>
+
 <body>
 
 <div class="card">
 <h2>Swagat Inventory Registration</h2>
 
-<form method="POST" action="/register">
+<form id="registerForm" method="POST" action="/register">
 
-<div class="section-title">Client Info <span style="color:red;">*</span></div>
+<div class="mb-4">
+  <div class="section-title">Client Unique ID <span style="color:red;">*</span></div>
 <input name="client_id" placeholder="Client Unique ID" required />
+</div>
 
-<div class="section-title">Monitor Details</div>
-<input name="monitor_brand" placeholder="Monitor Brand" />
+<div class="mb-4">
+  <div class="section-title">Monitor Details</div>
+<select name="monitor_brand">
+  <option value="">Select Monitor Brand</option>
+  <option>Dell</option>
+  <option>HP</option>
+  <option>LG</option>
+  <option>UPS</option>
+  <option>Lenovo</option>
+  <option>Logitech</option>
+  <option>Acer</option>
+  <option>AOC</option>
+  <option>Zebronics</option>
+  <option>Consistent</option>
+  <option>Foxin</option>
+  <option>Geonix</option>
+</select>
+<select name="monitor_size">
+  <option value="">Select Monitor Size</option>
+  <option>15 Inch</option>
+  <option>17 Inch</option>
+  <option>19 Inch</option>
+  <option>21 Inch</option>
+  <option>22 Inch</option>
+  <option>23 Inch</option>
+  <option>24 Inch</option>
+  <option>25 Inch</option>
+  <option>27 Inch</option>
+  <option>29 Inch</option>
+  <option>32 Inch</option>
+</select>
 <input name="monitor_serial" placeholder="Monitor Serial Number" />
+</div>
 
-<div class="section-title">Keyboard Details</div>
-<input name="keyboard_brand" placeholder="Keyboard Brand" />
+<div class="mb-4">
+  <div class="section-title">Keyboard Details</div>
+<select name="keyboard_brand">
+  <option value="">Select Keyboard Brand</option>
+  <option>Logitech</option>
+  <option>HP</option>
+  <option>Dell</option>
+  <option>Lenovo</option>
+  <option>Zebronics</option>
+  <option>UPS</option>
+  <option>Protonics</option>
+  
+</select>
 <input name="keyboard_serial" placeholder="Keyboard Serial Number" />
 
-<div class="section-title">Mouse Details</div>
-<input name="mouse_brand" placeholder="Mouse Brand" />
+</div>
 
+<div class="mb-4">
+  <div class="section-title">Mouse Details</div>
+<select name="mouse_brand">
+  <option value="">Select Mouse Brand</option>
+  <option>Logitech</option>
+  <option>HP</option>
+  <option>Dell</option>
+  <option>Lenovo</option>
+  <option>Zebronics</option>
+  <option>UPS</option>
+  <option>Protonics</option>
+</select>
+</div>
 
-<button type="submit">Complete Registration</button>
+<button type="submit" id="submitBtn">Submit</button>
+
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div>Registering system... Please wait</div>
+</div>
 
 </form>
 </div>
+
+<script>
+const form = document.getElementById("registerForm");
+const button = document.getElementById("submitBtn");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", function() {
+  button.disabled = true;
+  button.innerText = "Processing...";
+  loader.style.display = "block";
+});
+</script>
 
 </body>
 </html>

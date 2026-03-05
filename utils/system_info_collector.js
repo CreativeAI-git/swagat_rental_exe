@@ -11,7 +11,9 @@ async function collectData() {
       graphics,
       baseboard,
       bios,
-      battery
+      battery,
+      networkInterfaces
+    
     ] = await Promise.all([
       si.osInfo(),
       si.cpu(),
@@ -21,12 +23,15 @@ async function collectData() {
       si.graphics(),
       si.baseboard(),
       si.bios(),
-      si.battery()
+      si.battery(),
+      si.networkInterfaces()
     ]);
   
-    const deviceType = battery?.hasbattery ? "Laptop" : "Desktop";
+    const deviceType = battery.hasBattery ? "Laptop" : "Desktop";
     const assets = [];
-  
+    const activeNetwork = networkInterfaces.find(
+      n => !n.internal && n.ip4
+    );
     /* CPU */
     assets.push({
       category: "CPU",
@@ -99,28 +104,47 @@ async function collectData() {
   
     /* Monitor */
     graphics.displays.forEach(display => {
+      let approxSize = null;
+    
+      if (display.sizeX && display.sizeY) {
+        const diagonal = Math.sqrt(
+          display.sizeX ** 2 + display.sizeY ** 2
+        );
+    
+        // Heuristic: if value looks large → probably mm
+        if (display.sizeX > 100 || display.sizeY > 100) {
+          approxSize = (diagonal / 25.4).toFixed(1);
+        } 
+        // else assume cm
+        else {
+          approxSize = (diagonal / 2.54).toFixed(1);
+        }
+      }
+    
       assets.push({
         category: "Monitor",
+        brand: display.vendor || null,
+        model: display.model || null,
+        serial: display.serial || null,
         spec_json: {
           resolution: display.currentResX && display.currentResY
             ? `${display.currentResX}x${display.currentResY}`
             : null,
-          size_inches: display.sizeX && display.sizeY
-            ? (Math.sqrt(display.sizeX**2 + display.sizeY**2) / 25.4).toFixed(1)
-            : null,
+          approx_size_inches: approxSize,   // 👈 renamed
           main_display: display.main
         }
       });
     });
-  
     const systemInfo = {
       device_type: deviceType,
       os: osInfo.distro,
       hostname: osInfo.hostname,
       total_ram_gb: (mem.total / (1024 ** 3)).toFixed(2),
-      motherboard_serial: baseboard.serial
+      motherboard_serial: baseboard.serial,
+      mac_address: activeNetwork?.mac || null,
+      ip_address: activeNetwork?.ip4 || null
     };
-  
+    
     return {
       system_info: systemInfo,
       assets

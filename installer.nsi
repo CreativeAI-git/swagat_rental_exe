@@ -24,16 +24,15 @@ Section "Install"
   File "InventoryAgent.exe"
 
   DetailPrint "Opening Registration..."
-  
-  ExecWait '"$INSTDIR\InventoryAgent.exe" --register'
-  Pop $0
-  
+  ExecWait '"$INSTDIR\InventoryAgent.exe" --register' $0
+
   StrCmp $0 0 +2
   Abort "Registration Failed. Service not installed."
 
   DetailPrint "Creating Windows Service..."
-  nsExec::Exec 'sc create SwagatInventoryAgent binPath= "\"$INSTDIR\InventoryAgent.exe\"" start= auto'
-  Sleep 1000
+  nsExec::Exec 'sc create SwagatInventoryAgent binPath= "\"$INSTDIR\InventoryAgent.exe\"" start= auto DisplayName= \"Swagat Inventory Agent\"'
+
+  Sleep 2000
 
   DetailPrint "Starting Service..."
   nsExec::Exec 'sc start SwagatInventoryAgent'
