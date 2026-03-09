@@ -18,7 +18,7 @@ async function generateHardwareFingerprint() {
     clean(system.uuid),
     clean(baseboard.serial),
     clean(bios.serial),
-    clean(cpu.processorId)
+    clean(baseboard.model)
   ].join("|");
 
   const fingerprint = crypto
