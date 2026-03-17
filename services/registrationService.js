@@ -9,10 +9,12 @@ const { saveSystemIdentity } = require("../utils/system_identity_storage");
 
 // Live API
 const REGISTER_API = "http://187.124.99.24:8010/api/user/registerSystem";
+// const LOGIN_API = "http://187.124.99.24:8010/api/employee-authenticate";
 
 // Test API
 // const REGISTER_API = "http://187.124.99.24:8011/api/user/registerSystem";
 // const REGISTER_API = "http://192.168.1.48:8010/api/user/registerSystem";
+const LOGIN_API = "http://192.168.1.26:8011/api/employee-authenticate";
 
 
 async function startRegistration() {
@@ -20,12 +22,51 @@ async function startRegistration() {
   app.use(express.urlencoded({ extended: true }));
 
   app.get("/", (req, res) => {
-    const filePath = path.join(__dirname, "../views/registration.html");
+    const filePath = path.join(__dirname, "../views/login.html");
     res.send(fs.readFileSync(filePath, "utf8"));
   });
 
-  app.post("/register", async (req, res) => {
+  let loggedEmployee = null;
+  let authToken = null;
+  app.post("/login", async (req, res) => {
+
     try {
+
+      const { email, password } = req.body;
+
+      const response = await axios.post(LOGIN_API, {
+        email,
+        password
+      });
+
+      if (response.data.success) {
+
+        loggedEmployee = response.data.employee;
+        authToken = response.data.data.token; // ✅ token store
+        // login success → registration page open
+        const filePath = path.join(__dirname, "../views/registration.html");
+        return res.send(fs.readFileSync(filePath, "utf8"));
+
+      }
+
+      res.send(errorPage("Invalid employee credentials"));
+
+    } catch (err) {
+
+      res.send(errorPage("Login failed"));
+
+    }
+
+  });
+
+  app.post("/register", async (req, res) => {
+
+
+    try {
+
+      if (!authToken) {
+        return res.send(errorPage("Unauthorized: Please login again"));
+      }
       const collectedData = await collectData();
       const fingerprint = await generateHardwareFingerprint();
 
@@ -129,8 +170,12 @@ async function startRegistration() {
 
 
       const response = await axios.post(REGISTER_API, payload, {
-        timeout: 15000
-      });
+        timeout: 15000,
+        headers: {
+          Authorization: `Bearer ${authToken}` // 🔥 main change
+        }
+      }
+      );
 
       const systemId = response.data?.system_uuid;
 
@@ -162,12 +207,12 @@ async function startRegistration() {
     }
   });
 
-const server = app.listen(0, () => {
-  const port = server.address().port;
-  const url = `http://localhost:${port}`;
+  const server = app.listen(0, () => {
+    const port = server.address().port;
+    const url = `http://localhost:${port}`;
 
-  exec(`cmd /c start "" "${url}"`);
-});
+    exec(`cmd /c start "" "${url}"`);
+  });
 }
 
 

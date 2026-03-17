@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Swagat Employee Login</title>
+
+<style>
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.mb-4{
+  margin-bottom: 15px;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#4e73df,#1cc88a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  background:#fff;
+  padding:30px;
+  border-radius:10px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.section-title{
+  font-weight:bold;
+  margin-bottom:8px;
+  font-size:14px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border-radius:5px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#4e73df;
+  color:#fff;
+  border:none;
+  border-radius:5px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#2e59d9;
+}
+
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+.loader{
+  display:none;
+  text-align:center;
+  margin-top:15px;
+}
+
+.spinner{
+  border:4px solid #f3f3f3;
+  border-top:4px solid #4e73df;
+  border-radius:50%;
+  width:30px;
+  height:30px;
+  animation:spin 1s linear infinite;
+  margin:0 auto 10px;
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Swagat Employee Login</h2>
+
+<form id="loginForm" method="POST" action="/login">
+
+<div class="mb-4">
+<div class="section-title">Email <span style="color:red">*</span></div>
+<input name="email" type="email" placeholder="Enter Email" required />
+</div>
+
+<div class="mb-4">
+<div class="section-title">Password <span style="color:red">*</span></div>
+<input name="password" type="password" placeholder="Enter Password" required />
+</div>
+
+<button type="submit" id="submitBtn">Login</button>
+
+<div class="loader" id="loader">
+<div class="spinner"></div>
+<div>Please wait...</div>
+</div>
+
+</form>
+
+</div>
+
+<script>
+const form = document.getElementById("loginForm");
+const button = document.getElementById("submitBtn");
+const loader = document.getElementById("loader");
+
+form.addEventListener("submit", function(){
+  button.disabled = true;
+  button.innerText = "Authenticating...";
+  loader.style.display = "block";
+});
+</script>
+
+</body>
+</html>
